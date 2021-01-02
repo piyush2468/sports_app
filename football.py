@@ -3,7 +3,6 @@ import streamlit as st
 # working with sample data.
 import numpy as np
 import pandas as pd
-import time
 import altair as alt
 import plotly.express as px
 from plotly.subplots import make_subplots
