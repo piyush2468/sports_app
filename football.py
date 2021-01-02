@@ -11,9 +11,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.neighbors import NearestNeighbors
 
-Player_URL = ('Football_data\Players.csv')
-Team_URL = ('Football_data\Teams.csv')
-Keeper_URL = ('Football_data\Keepers.csv')
+Player_URL = ('https://github.com/piyush2468/sports_app/blob/master/Football_data/Players.csv')
+Team_URL = ('https://github.com/piyush2468/sports_app/blob/master/Football_data/Teamss.csv')
+Keeper_URL = ('https://github.com/piyush2468/sports_app/blob/master/Football_data/Keepers.csv')
 
 def main():
     player_df = load_data()
