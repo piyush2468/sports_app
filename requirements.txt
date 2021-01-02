@@ -71,6 +71,7 @@ gitdb==4.0.5
 GitPython==3.1.11
 glob2==0.7
 greenlet==0.4.15
+gunicorn==19.7.1
 h5py==2.10.0
 HeapDict==1.0.1
 html5lib==1.0.1
