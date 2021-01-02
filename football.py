@@ -12,7 +12,7 @@ import seaborn as sns
 from sklearn.neighbors import NearestNeighbors
 
 Player_URL = ('https://raw.githubusercontent.com/piyush2468/sports_app/master/Football_data/Players.csv')
-Team_URL = ('https://raw.githubusercontent.com/piyush2468/sports_app/master/Football_data/Teams.csv?')
+Team_URL = ('https://raw.githubusercontent.com/piyush2468/sports_app/master/Football_data/Teams.csv')
 Keeper_URL = ('https://raw.githubusercontent.com/piyush2468/sports_app/master/Football_data/Keepers.csv')
 
 def main():
