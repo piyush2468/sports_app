@@ -199,8 +199,10 @@ def visualize_players(df, keeper_df, player_1, player_2, season):
 	col4,col5,col6 = st.beta_columns(3)
 	with col1:
 		if ((player_1_data['position'].values == 'GK') and (player_2_data['position'].values == 'GK')):
+			st.write('Player detailed stats side by side')
 			st.dataframe(horizontal_df_gk)
 		else:
+			st.write('Player detailed stats side by side')
 			st.dataframe(horizontal_df)
 	with col3:
 		if ((player_1_data['position'].values == 'GK') and (player_2_data['position'].values == 'GK')):
