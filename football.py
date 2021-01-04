@@ -45,8 +45,9 @@ def main():
     unique = player_df.player.unique()
 
     if page == "Homepage":
-	col1,col2,col3= st.beta_columns(3)
-	with col2:
+        col1,col2,col3= st.beta_columns(3)
+        with col2:
+
         	st.header("This is an advance football data explorer.")
         	st.write("Please select a page on the left for different analysis.")
         	st.markdown("![Alt Text](https://i.pinimg.com/originals/71/64/5d/71645d4afa6ff297eb32868d0010c6be.gif)")
@@ -198,10 +199,8 @@ def visualize_players(df, keeper_df, player_1, player_2, season):
 	col4,col5,col6 = st.beta_columns(3)
 	with col1:
 		if ((player_1_data['position'].values == 'GK') and (player_2_data['position'].values == 'GK')):
-			st.write('Player detailed stats')
 			st.dataframe(horizontal_df_gk)
 		else:
-			st.write('Player detailed stats')
 			st.dataframe(horizontal_df)
 	with col3:
 		if ((player_1_data['position'].values == 'GK') and (player_2_data['position'].values == 'GK')):
