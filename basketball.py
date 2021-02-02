@@ -22,7 +22,7 @@ hide_streamlit_style = """
 					"""
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-Games_url = ('s3://nbabdata/games_details.csv')
+Games_url = ('s3://nbabdata/games.csv')
 Games_details_url = ('s3://nbabdata/games_details.csv')
 players_url = ('s3://nbabdata/players.csv')
 rankings_url = ('s3://nbabdata/ranking.csv')
