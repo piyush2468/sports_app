@@ -1,7 +1,6 @@
 
 import streamlit as st
-favicon = "https://images.app.goo.gl/hptGWk6pMkK7koTz6"
-st.set_page_config(page_title='Player Analytics App', page_icon= favicon, layout = 'wide', initial_sidebar_state = 'auto')
+
 
 # To make things easier later, we're also importing numpy and pandas for
 # working with sample data.
@@ -19,6 +18,7 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import StandardScaler
 
+
 Player_URL = ('https://raw.githubusercontent.com/piyush2468/sports_app/master/Football_data/Players.csv')
 Team_URL = ('https://raw.githubusercontent.com/piyush2468/sports_app/master/Football_data/Teams.csv')
 Keeper_URL = ('https://raw.githubusercontent.com/piyush2468/sports_app/master/Football_data/Keepers.csv')
@@ -32,6 +32,7 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 
+
 def main():
     player_df = load_data()
     team_df = load_data1()
@@ -42,7 +43,7 @@ def main():
     merged_df = pd.merge(team_df, player_df,  how='left', on=['League','Season','squad'])
     merged_df = merged_df[merged_df['player'].notna()]
     merged_df.drop_duplicates(inplace=True)
-    analysis = ['Team analysis', 'Team and players analysis']
+    analysis = ['Team analysis', 'Team and players analysis', 'Top players with choosen attributes']
     play_type = ['Attacking','Passing','Defending']
     options = ['Players Comparision', 'Single Player Analysis']
     positions = ['FW','FW,MF','MF,FW','MF','MF,DF','DF,MF','DF','GK']
@@ -50,12 +51,9 @@ def main():
     unique = player_df.player.unique()
 
     if page == "Homepage":
-        col1,col2,col3= st.beta_columns(3)
-        with col2:
-
-        	st.header("This is an advance football data explorer.")
-        	st.write("Please select a page on the left for different analysis.")
-        	st.markdown("![Alt Text](https://i.pinimg.com/originals/71/64/5d/71645d4afa6ff297eb32868d0010c6be.gif)")
+        st.header("This is an advance football data explorer.")
+        st.write("Please select a page on the left for different analysis.")
+        st.markdown("![Alt Text](https://i.pinimg.com/originals/71/64/5d/71645d4afa6ff297eb32868d0010c6be.gif)")
 
     elif page == "Stats Exploration":
         st.title("Advanced Teams Stats Exploration")
@@ -93,6 +91,25 @@ def main():
         		submit = st.button('Submit')
         	if submit:
         		visualize_teams_players(merged_df,season,player,play)
+        	else:
+        		with col5:
+        			st.markdown("![Alt Text](https://media.giphy.com/media/r8JxWQyDmE3C/source.gif)")
+
+        elif option == 'Top players with choosen attributes':
+        	st.header('Choose the attributes for the top players')
+        	col1,col2,col3= st.beta_columns(3)
+        	col4,col5,col6 = st.beta_columns(3)
+        	
+        	with col1:
+        		league = st.selectbox("Choose a league", leagues)
+        	with col2:
+        		season = st.selectbox("Choose a season", seasons)
+        	with col3:
+        		attribute = st.selectbox("Choose an attribute", df2.columns)
+        	with col5:
+        		submit = st.button('Submit')
+        	if submit:
+        		visualize_attribute_players(player_df, keeper_df, league, season, attribute)
         	else:
         		with col5:
         			st.markdown("![Alt Text](https://media.giphy.com/media/r8JxWQyDmE3C/source.gif)")
@@ -790,6 +807,9 @@ def visualize_teams_players(df,season,player,play):
 	squad = season_data['squad'].values
 	col1,col2,col3 = st.beta_columns(3)
 	colors = ['red','orange']*6
+	if season_data['position'].values == 'GK':
+		st.write("This tool is not for goalkeepers team contribution")
+		return None
 	if play == 'Attacking':
 		columns = ['goals_x','goals_y','assists_x','assists_y','gca_x','gca_y','sca_x','sca_y','passes_into_final_third_x','passes_into_final_third_y','passes_into_penalty_area_x','passes_into_penalty_area_y']
 		att = season_data[columns]
@@ -854,7 +874,25 @@ def visualize_teams_players(df,season,player,play):
         			'yanchor': 'top'})
 			st.plotly_chart(fig)
 
-
+def visualize_attribute_players(player_df, keeper_df, league, season, attribute):
+	if attribute in keeper_df.columns:
+		league_data = keeper_df[keeper_df['League'] == league]
+		X = 'minutes_gk'
+	else:
+		league_data = player_df[player_df['League'] == league]
+		X = 'minutes'
+	season_data = league_data[league_data['Season'] == season]
+	df = season_data.sort_values(by=[attribute])
+	fig = px.scatter(df, x=X ,y=attribute, color = "squad", size = attribute , hover_data=['player'])
+	fig.update_layout(height=500,width=800)
+	fig.update_layout(
+    				title={
+        			'text': 'Top players of the' + ' ' + str(league) +' '+'having' +' '+ str(attribute) +' ' + 'in' +' '+ str(season),
+        			'y':0.98,
+        			'x':0.40,
+        			'xanchor': 'center',
+        			'yanchor': 'top'})
+	st.plotly_chart(fig)
 
 
 
