@@ -22,11 +22,11 @@ hide_streamlit_style = """
 					"""
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-Games_url = ('https://nbabdata.s3.amazonaws.com/games.csv')
-Games_details_url = ('https://nbabdata.s3.amazonaws.com/games_details.csv')
-players_url = ('https://nbabdata.s3.amazonaws.com/players.csv')
-rankings_url = ('https://nbabdata.s3.amazonaws.com/ranking.csv')
-teams_url = ('https://nbabdata.s3.amazonaws.com/teams.csv')
+Games_url = ('s3://nbabdata/games_details.csv')
+Games_details_url = ('s3://nbabdata/games_details.csv')
+players_url = ('s3://nbabdata/players.csv')
+rankings_url = ('s3://nbabdata/ranking.csv')
+teams_url = ('s3://nbabdata/teams.csv')
 
 @st.cache(allow_output_mutation=True)
 def load_data4():
