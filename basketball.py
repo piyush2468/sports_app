@@ -28,6 +28,8 @@ players_url = ('s3://nbabdata/players.csv')
 rankings_url = ('s3://nbabdata/ranking.csv')
 teams_url = ('s3://nbabdata/teams.csv')
 
+
+
 @st.cache(allow_output_mutation=True)
 def load_data4():
     df = pd.read_csv(Games_url)
@@ -225,6 +227,9 @@ def visualize_players(games_details_df_new, games_df_new, season, player, match)
 	merged_df = player_df.merge(games_df_new, on='GAME_ID')
 	merged_match_df = merged_df[merged_df['Match'] == match]
 	merge_df = merged_match_df[merged_match_df['SEASON'] == season]
+	if merge_df.empty:
+		st.write('No data available')
+		return None
 	st.subheader('Detailed Stats')
 	st.write(merge_df.drop(['GAME_ID','TEAM_ID','PLAYER_ID','HOME_TEAM_ID','VISITOR_TEAM_ID','TEAM_ID_home','TEAM_ID_away'],axis=1))
 	attributes = ['Points made HomeTeam','Points made AwayTeam','Assists HomeTeam','Rebounds HomeTeam','Assists AwayTeam','Rebounds AwayTeam','Field Goals Made','Field Goals Attempted','Three Pointers Made','Three Pointers Attempted','Free Throws Made','Free Throws Attempted','Offensive Rebounds','Defensive Rebounds','Rebounds','Assists','Turnovers','Steals','Blocked Shots','Personal Foul','Points',]
@@ -282,6 +287,12 @@ def visualize_two_players(games_details_df_new, games_df_new, player_1, player_2
 	player2_df = games_details_df_new[games_details_df_new['PLAYER_NAME'] == player_2]
 	merged2_df = player2_df.merge(games_df_new, on='GAME_ID')
 	merge2_df = merged2_df[merged2_df['SEASON'] == player_season]
+	if merge1_df.empty:
+		st.write('No data available')
+		return None
+	if merged2_df.empty:
+		st.write('No data available')
+		return None
 	attributes = ['Three Pointers Made','Free Throws Made','Offensive Rebounds','Defensive Rebounds','Rebounds','Assists','Turnovers','Steals','Blocked Shots','Personal Foul']
 	col1,col2,col3,col4 = st.beta_columns(4)
 	rel1_df = merge1_df[attributes]
@@ -360,6 +371,9 @@ def visualize_single_player(games_details_df_new,games_df_new, player_1, player_
 	player_df = games_details_df_new[games_details_df_new['PLAYER_NAME'] == player_1]
 	merged_df = player_df.merge(games_df_new, on='GAME_ID')
 	merge_df = merged_df[merged_df['SEASON'] == player_season]
+	if merge_df.empty:
+		st.write('No data available')
+		return None
 	attributes = ['Three Pointers Made','Free Throws Made','Offensive Rebounds','Defensive Rebounds','Rebounds','Assists','Turnovers','Steals','Blocked Shots','Personal Foul']
 	attributes_name = ['PLAYER_NAME','Three Pointers Made','Free Throws Made','Offensive Rebounds','Defensive Rebounds','Rebounds','Assists','Turnovers','Steals','Blocked Shots','Personal Foul']
 	col1,col2,col3,col4 = st.beta_columns(4)

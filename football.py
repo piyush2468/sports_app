@@ -37,6 +37,9 @@ def main():
     player_df = load_data()
     team_df = load_data1()
     keeper_df = load_data2()
+    player_df.fillna(0,inplace=True)
+    team_df.fillna(0,inplace=True)
+    keeper_df.fillna(0,inplace=True)
     page = st.sidebar.selectbox("Choose a page", ["Homepage", "Stats Exploration", "Players Comparision", "Scout Watch"])
     seasons = ['2020/2021','2019/2020','2018/2019','2017/2018']
     leagues = ['Premier League', 'SerieA', 'La Liga', 'Bundesliga', 'Ligue1']
@@ -155,17 +158,17 @@ def main():
     		show_top_players(player_df, keeper_df ,league,position,season)
 
 
-@st.cache
+@st.cache(allow_output_mutation=True)
 def load_data():
     df = pd.read_csv(Player_URL)
     return df
 
-@st.cache
+@st.cache(allow_output_mutation=True)
 def load_data1():
     df = pd.read_csv(Team_URL)
     return df
 
-@st.cache
+@st.cache(allow_output_mutation=True)
 def load_data2():
     df = pd.read_csv(Keeper_URL)
     return df
@@ -233,10 +236,20 @@ def visualize_teams_attribute(df, league, season, attribute):
 def visualize_players(df, keeper_df, player_1, player_2, season):
 	season_data = df[df['Season'] == season]
 	player_1_data = season_data[season_data['player'] == player_1]
-	player_2_data = season_data[season_data['player'] == player_2] 
+	player_2_data = season_data[season_data['player'] == player_2]
+	if player_1_data.empty:
+		st.write('No data available')
+		return None
+	if player_2_data.empty:
+		st.write('No data available')
+		return None
+	player_1_data.fillna(0,inplace=True)
+	player_2_data.fillna(0,inplace=True)
 	season_data_gk = keeper_df[keeper_df['Season'] == season]
 	player_1_data_gk = season_data_gk[season_data_gk['player'] == player_1]
 	player_2_data_gk = season_data_gk[season_data_gk['player'] == player_2]
+	player_1_data_gk.fillna(0,inplace=True)
+	player_2_data_gk.fillna(0,inplace=True)
 	horizontal_df = pd.concat([player_1_data.T, player_2_data.T],axis =1)
 	horizontal_df_gk = pd.concat([player_1_data_gk.T, player_2_data_gk.T],axis =1)
 	nn_data_1 = player_1_data.drop(['player','nationality','squad','age','Season','League'],axis=1)
@@ -521,14 +534,28 @@ def visualize_players(df, keeper_df, player_1, player_2, season):
 def visualize_single_player(df, keeper_df, player_1, season):
 	season_data = df[df['Season'] == season]
 	player_1_data = season_data[season_data['player'] == player_1]
+	if player_1_data.empty:
+		st.write('No data available')
+		return None
 	season_data_gk = keeper_df[keeper_df['Season'] == season]
-	player_1_data_gk = season_data_gk[season_data_gk['player'] == player_1]
+	player_1_data_gk = season_data_gk[season_data_gk['player'] == player_1]	
+
+	player_1_data_gk.fillna(0,inplace=True)
+	player_1_data.fillna(0,inplace=True)
+	
+		
+	
+	
+
 	if (player_1_data['position'].values == 'FW'):
 		season_data_position = season_data[season_data['position'] == 'FW']
 		season_data_position.reset_index(inplace=True,drop=True)
 
 	elif (player_1_data['position'].values == 'FW,MF'):
 		season_data_position = season_data[season_data['position'] == 'FW,MF']
+		season_data_position.reset_index(inplace=True,drop=True)
+	elif (player_1_data['position'].values == 'FW,DF'):
+		season_data_position = season_data[season_data['position'] == 'FW,DF']
 		season_data_position.reset_index(inplace=True,drop=True)
 	elif (player_1_data['position'].values == 'MF,FW'):
 		season_data_position = season_data[season_data['position'] == 'MF,FW']
@@ -629,8 +656,8 @@ def visualize_single_player(df, keeper_df, player_1, season):
 		
 		elif ((player_1_data['position'].values == 'MF') or (player_1_data['position'].values =='MF,DF')):
 			data = [go.Scatterpolar(
-  				r = [player_1_data['sca_per90'].values[0],player_1_data['gca_per90'].values[0],player_1_data['xg_xa_per90'].values[0],player_1_data['passes_into_final_third'].values[0],player_1_data['passes_into_penalty_area'].values[0],player_1_data['through_balls'].values[0],player_1_data["npxg_xa_per90"].values[0]],
-  				theta = ['shot creation per 90','goals creation per 90','xg xa per 90','passes into final third','passes into penalty area','through balls','non penalty goals per90'],
+  				r = [player_1_data['sca_per90'].values[0],player_1_data['gca_per90'].values[0],player_1_data['xg_xa_per90'].values[0],player_1_data['pressure_regain_pct'].values[0],player_1_data['passes_into_penalty_area'].values[0],player_1_data['through_balls'].values[0],player_1_data["npxg_xa_per90"].values[0]],
+  				theta = ['shot creation per 90','goals creation per 90','xg xa per 90','pressure regains pct','passes into penalty area','through balls','non penalty goals per90'],
   				fill = 'toself',
   				name= str(player_1),
      			line =  dict(
@@ -642,7 +669,7 @@ def visualize_single_player(df, keeper_df, player_1, season):
   				polar = dict(
     			radialaxis = dict(
       			visible = True,
-      			range = [0, 50]
+      			range = [0, 70]
     			)
   			),
   				showlegend = True,
