@@ -19,9 +19,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import StandardScaler
 
 
-Player_URL = ('s3://footbalstat/Players.csv')
-Team_URL = ('s3://footbalstat/Teams.csv')
-Keeper_URL = ('s3://footbalstat/Keepers.csv')
+Player_URL = ('https://raw.githubusercontent.com/piyush2468/sports_app/master/Football_data/Players.csv')
+Team_URL = ('https://raw.githubusercontent.com/piyush2468/sports_app/master/Football_data/Teams.csv')
+Keeper_URL = ('https://raw.githubusercontent.com/piyush2468/sports_app/master/Football_data/Keepers.csv')
 
 hide_streamlit_style = """
 					<style>
